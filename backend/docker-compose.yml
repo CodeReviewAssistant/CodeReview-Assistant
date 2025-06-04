@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7.2-alpine #Database used
+    container_name: local-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    command: redis-server --requirepass "Abcd@1234"
+
+  gitlab:
+    image: gitlab/gitlab-ee:latest #for CI/CD
+    container_name: local-gitlab
+    hostname: 'gitlab.dsu.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.dsu.com'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        gitlab_rails['redis_host'] = 'redis'
+        gitlab_rails['redis_port'] = 6379
+        gitlab_rails['redis_password'] = 'Abcd@1234'
+    ports:
+      - "80:80"
+      - "443:443"
+      - "2224:22"
+    volumes:
+      - gitlab-config:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-data:/var/opt/gitlab
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/haru/Desktop/codereview-backend/containers/redis
+  gitlab-config:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/haru/Desktop/codereview-backend/containers/gitlab/config
+  gitlab-logs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/haru/Desktop/codereview-backend/containers/gitlab/logs
+  gitlab-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /Users/haru/Desktop/codereview-backend/containers/gitlab/data
+
+
+
+# gitlab-Username: root
+# gitlab-Password: aNObNvrIiTNkUDlO28VLNlnjg/X74NLxxc7sB+GgfOs=
+#grep 'Password:' /etc/gitlab/initial_root_password

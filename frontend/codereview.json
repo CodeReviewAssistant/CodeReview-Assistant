@@ -1,0 +1,17 @@
+{
+    "web": {
+        "client_id": "191626543664-1a7pgs0amuou8j4krm4r8qgallq2n4qm.apps.googleusercontent.com",
+        "project_id": "codereviewassistant-454605",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_secret": "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",
+        "redirect_uris": [
+            "http://localhost:5173",
+            "http://127.0.0.1:8000/verify-token"
+        ],
+        "javascript_origins": [
+            "http://localhost:5173"
+        ]
+    }
+}
